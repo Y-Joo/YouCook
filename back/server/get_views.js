@@ -1,4 +1,9 @@
 var request=require('request');
+const express=require('express');
+const bodyParser = require('body-parser');
+const app=express();
+
+app.use(bodyParser.json());
 
 var optionParams={
 	id:"3AGVlD8US0w",
@@ -15,5 +20,5 @@ for(var option in optionParams){
 url=url.substr(0, url.length-1);
 
 request(url, function(err, res, body){
-	console.log(body)
+	console.log(JSON.parse(body).items);
 });
