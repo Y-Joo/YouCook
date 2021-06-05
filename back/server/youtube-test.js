@@ -1,3 +1,4 @@
+const axios = require('axios');
 const express=require('express');
 const bodyParser = require('body-parser');
 const app=express();
@@ -28,10 +29,12 @@ function get_views(v_id){
     //url의마지막에 붙어있는 & 정리
     url=url.substr(0, url.length-1);
     var dict={};
-    request(url, function(err, res, body){
-        dict = JSON.parse(body);
+    axios.get(url).then((res)=>{
+        dict = (res.data);
+        //console.log(dict.items);
         console.log(dict.items);
     });
+    
 }
 
 youtube.setKey('AIzaSyDpKrC6z9dYW69Dz9xeAR8MNqhZLar8wbM'); // API 키 입력
@@ -54,12 +57,12 @@ youtube.search(word, limit, function (err, result) { // 검색 실행
         var thumbnails = it["snippet"]["thumbnails"]["high"]["url"];
         var channel_title = it["snippet"]["channelTitle"];
         var video_id = it["id"]["videoId"];
-        console.log("제목 : " + title);
-        console.log("Video_id : " + video_id);
-        console.log("channel_id : " + channelId);
-        console.log("썸네일 주소 : " + thumbnails);
-        console.log("채널명 : " + channel_title);
-        console.log("-----------");
-        console.log(get_views(video_id));
+        // console.log("제목 : " + title);
+        // console.log("Video_id : " + video_id);
+        // console.log("channel_id : " + channelId);
+        // console.log("썸네일 주소 : " + thumbnails);
+        // console.log("채널명 : " + channel_title);
+        // console.log("-----------");
+        get_views(video_id);
     }
 });
