@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const mongoose = require("mongoose");
+const config = require("./config/key");
+const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 const connect = mongoose.connect(config.mongoURI,
   {
@@ -16,7 +17,12 @@ const connect = mongoose.connect(config.mongoURI,
   .catch(err => console.log(err));
   
 const port = 5000;
+
+app.use(cors())
+app.use(bodyParser.json());
+
+app.use('/api/search', require('./routes/search'));
+
 app.listen(port, () => {
   console.log(`Server Listening on ${port}`)
 });
-module.exports = router;
