@@ -59,9 +59,17 @@ class SearchState extends State<Search> {
 
     );
   }
-  
-  void _handleSubmitted(String text) {
+
+  Future<dynamic> _handleSubmitted(String text) {
     _textController.clear();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(text),
+          );
+        }
+    );
   }
 
 }
