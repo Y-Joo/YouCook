@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { search } = require("../models/search");
+const axios = require('axios');
+const express=require('express');
+const bodyParser = require('body-parser');
 const app=express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended : false}));
@@ -62,21 +62,19 @@ function get_subs(word, view_it, it, channel_id){
         var dislikeCount=view_it.dislikeCount;
         var commentCount=view_it.commentCount;
         var tmp_dict={title, video_id, channelId, thumbnails, channel_title, subscriberCount, viewCount, likeCount, dislikeCount, commentCount};
-        const new_model=new search({
-            search_word: word,
-            videos:tmp_dict,
-        })
-        new_model.save((err, doc) => {
-            if(err) {
-                return res.json({ success: false, err });
-            } else {
-                console.log("save성공");
-                return res.status(200).json({
-                    models: new_model
-                });
-            } 
-        }
-        )
+        console.log(tmp_dict);
+        // console.log("검색어 : " + word);
+        // console.log("제목 : " + title);
+        // console.log("Video_id : " + video_id);
+        // console.log("channel_id : " + channelId);
+        // console.log("썸네일 주소 : " + thumbnails);
+        // console.log("채널명 : " + channel_title);
+        // console.log("구독자 수 : " + dict.items[0].statistics.subscriberCount);
+        // console.log("조회 수 : " + view_it.viewCount);
+        // console.log("좋아요 수 : " + view_it.likeCount);
+        // console.log("싫어요 수 : " + view_it.dislikeCount);
+        // console.log("댓글 수 : " + view_it.commentCount);
+        // console.log("-----------");
     });
     
 }
@@ -105,18 +103,4 @@ function get_search(str){
         }
     });
 }
-
-router.post('/find', (req, res) => {
-    search.findOne({ search_word: req.body.word })
-        .exec((err, videos) => {
-            if(err) {
-                get_search(req.body.word);
-                search.findOne({ search_word: req.body.word })
-                    .exec((err, data) => {
-                        if(err) return res.status(400).send(err)
-                        return res.status(200).json({ data })
-        })
-            }
-            return res.status(200).json({ videos })
-        })
-});
+get_search('제육볶음');
