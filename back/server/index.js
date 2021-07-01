@@ -7,7 +7,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 /* GET home page. */
-
 const connect = mongoose.connect(config.mongoURI,
   {
     useNewUrlParser: true, useUnifiedTopology: true,

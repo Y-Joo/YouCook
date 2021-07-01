@@ -97,6 +97,7 @@ function get_search(str){
         
         var items = result["items"]; // 결과 중 items 항목만 가져옴
         for (var i in items) { 
+            console.log(i, items.length);
             var it = items[i];
             var video_id = it["id"]["videoId"];
             get_views(word, it, video_id);
