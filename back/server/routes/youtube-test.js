@@ -7,13 +7,14 @@ app.use(express.urlencoded({extended : false}));
 
 var Youtube = require('youtube-node');
 var youtube = new Youtube();
+var number_list=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 function get_views(word, it, v_id){
     var request=require('request');
 
     var optionParams={
         id:v_id,
-        part:"statistics",
+        part:"snippet, statistics",
         key:"AIzaSyDpKrC6z9dYW69Dz9xeAR8MNqhZLar8wbM",
     };
     
@@ -27,8 +28,20 @@ function get_views(word, it, v_id){
     var dict={};
     axios.get(url).then((res)=>{
         dict = (res.data);
-        var view_it=dict.items[0].statistics;
-        get_subs(word, view_it, it, it["snippet"]["channelId"])
+        var str_list=dict.items[0].snippet.description.split('\n');
+        //console.log(dict.items[0].snippet.description);
+        console.log('-----레시피 출력 시작-----')
+        for (var i in str_list){
+            str=str_list[i]
+            if (str[0] in number_list && str[1]=='.' ||
+            str[0] in number_list && str[1] in number_list && str[2]=='.'){
+                console.log(str);
+            }
+            // console.log(str_list[i]);
+        }
+        console.log('-----레시피 출력 종료-----');
+        // var view_it=dict.items[0].statistics;
+        // get_subs(word, view_it, it, it["snippet"]["channelId"])
     });
     
 }
@@ -62,7 +75,7 @@ function get_subs(word, view_it, it, channel_id){
         var dislikeCount=view_it.dislikeCount;
         var commentCount=view_it.commentCount;
         var tmp_dict={title, video_id, channelId, thumbnails, channel_title, subscriberCount, viewCount, likeCount, dislikeCount, commentCount};
-        console.log(tmp_dict);
+        // console.log(tmp_dict);
         // console.log("검색어 : " + word);
         // console.log("제목 : " + title);
         // console.log("Video_id : " + video_id);
@@ -97,11 +110,12 @@ function get_search(str){
         
         var items = result["items"]; // 결과 중 items 항목만 가져옴
         for (var i in items) { 
-            console.log(i, items.length);
             var it = items[i];
+            // console.log(it["snippet"]["description"]);
+            // console.log(it["snippet"]["description"].length);
             var video_id = it["id"]["videoId"];
             get_views(word, it, video_id);
         }
     });
 }
-get_search('제육볶음');
+get_search('김치볶음밥 레시피');

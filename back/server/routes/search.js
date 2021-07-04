@@ -8,12 +8,12 @@ var Youtube = require('youtube-node');
 var youtube = new Youtube();
 var video_arr=[];
 
-async function get_views(flag, word, it, v_id){
+function get_views(flag, word, it, v_id, originRes){
     var request=require('request');
 
     var optionParams={
         id:v_id,
-        part:"statistics",
+        part:"snippet, statistics",
         key:"AIzaSyDpKrC6z9dYW69Dz9xeAR8MNqhZLar8wbM",
     };
     
@@ -25,15 +25,15 @@ async function get_views(flag, word, it, v_id){
     //url의마지막에 붙어있는 & 정리
     url=url.substr(0, url.length-1);
     var dict={};
-    await axios.get(url).then((res)=>{
+    axios.get(url).then((res)=>{
         dict = (res.data);
         var view_it=dict.items[0].statistics;
-        get_subs(flag, word, view_it, it, it["snippet"]["channelId"])
+        get_subs(flag, word, view_it, it, it["snippet"]["channelId"], originRes)
     });
     
 }
 
-async function get_subs(flag, word, view_it, it, channel_id){
+function get_subs(flag, word, view_it, it, channel_id, originRes){
     var request=require('request');
 
     var optionParams={
@@ -49,7 +49,7 @@ async function get_subs(flag, word, view_it, it, channel_id){
 
     //url의마지막에 붙어있는 & 정리
     url=url.substr(0, url.length-1);
-    await axios.get(url).then((res)=>{
+    axios.get(url).then((res)=>{
         dict = (res.data);
         var title = it["snippet"]["title"];
         var channelId = it["snippet"]["channelId"];
@@ -71,12 +71,9 @@ async function get_subs(flag, word, view_it, it, channel_id){
             })
             new_model.save((err, doc) => {
                 if(err) {
-                    return res.json({ success: false, err });
+                    // return res.json({ success: false, err });
                 } else {
-                    console.log("save성공");
-                    return res.status(200).json({
-                        models: new_model
-                    });
+                    return originRes.status(200).json({ new_model })
                 } 
             }
             )
@@ -87,7 +84,7 @@ async function get_subs(flag, word, view_it, it, channel_id){
 }
 
 
-async function get_search(str){
+async function get_search(str, originRes){
     youtube.setKey('AIzaSyDpKrC6z9dYW69Dz9xeAR8MNqhZLar8wbM'); // API 키 입력
 
     //// 검색 옵션 시작
@@ -107,7 +104,7 @@ async function get_search(str){
             if (i==items.length - 1) flag=1;
             var it = items[i];
             var video_id = it["id"]["videoId"];
-            get_views(flag, word, it, video_id);
+            get_views(flag, word, it, video_id, originRes);
         }
     });
 }
@@ -117,16 +114,9 @@ router.post('/find', (req, res) => {
         .exec((err, videos) => {
             if (err) return res.status(400).send(err)
             if(!videos) {
-                get_search(req.body.word);
-                search.findOne({ search_word: req.body.word })
-                    .exec((err, data) => {
-                        if(err) return res.status(400).send(err)
-                        return res.status(200).json({ data })
-        })
-
-            }
-            else{
-            return res.status(200).json({ videos })
+                get_search(req.body.word, res);
+            } else {
+                return res.status(200).json({ videos })
             }
         })
 });
