@@ -30,15 +30,18 @@ function get_views(word, it, v_id){
         dict = (res.data);
         var str_list=dict.items[0].snippet.description.split('\n');
         //console.log(dict.items[0].snippet.description);
+        var des_str=[]
         console.log('-----레시피 출력 시작-----')
         for (var i in str_list){
             str=str_list[i]
             if (str[0] in number_list && str[1]=='.' ||
             str[0] in number_list && str[1] in number_list && str[2]=='.'){
-                console.log(str);
+                if (str[str.length-2]>='a' && str[str.length-2]<='z') continue;
+                des_str.push(str);
             }
             // console.log(str_list[i]);
         }
+        console.log(des_str);
         console.log('-----레시피 출력 종료-----');
         // var view_it=dict.items[0].statistics;
         // get_subs(word, view_it, it, it["snippet"]["channelId"])
