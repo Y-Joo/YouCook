@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 //ssda
 const search_schema = mongoose.Schema({
-    search_word: String,
+    searchWord: String,
     videos: [],
 })
 
