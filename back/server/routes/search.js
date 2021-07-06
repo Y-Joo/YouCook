@@ -13,8 +13,9 @@ var youtube = new Youtube();
 var videoArr = [];
 var numberList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+var funcCount=-1;
 
-function getViews(flag, word, it, v_id, originRes) {
+function getViews(videoCount, word, it, v_id, originRes) {
     var request = require('request');
 
     var optionParams = {
@@ -44,12 +45,12 @@ function getViews(flag, word, it, v_id, originRes) {
             }
         }
         var viewIt = dict.items[0].statistics;
-        getSubs(flag, word, viewIt, it, it["snippet"]["channelId"], originRes, desStr)
+        getSubs(videoCount, word, viewIt, it, it["snippet"]["channelId"], originRes, desStr)
     });
 
 }
 
-function getSubs(flag, word, viewIt, it, channelId, originRes, description) {
+function getSubs(videoCount, word, viewIt, it, channelId, originRes, description) {
     var request = require('request');
 
     var optionParams = {
@@ -90,13 +91,16 @@ function getSubs(flag, word, viewIt, it, channelId, originRes, description) {
             commentCount,
             description
         };
+        funcCount += 1;
         if (description.length != 0) videoArr.push(tmpDict);
-        if (flag) {
+        console.log(funcCount, videoCount);
+        if (funcCount==videoCount) {
             const newModel = new search({
                 searchWord: word,
                 videos: videoArr,
             })
             videoArr = [];
+            funcCount = -1;
             newModel.save((err, doc) => {
                 if (err) {
                     // return res.json({ success: false, err });
@@ -128,14 +132,13 @@ function getSearch(str, originRes) {
             console.log(err);
             return;
         } // 에러일 경우 에러공지하고 빠져나감
-        var flag = 0
 
         var items = result["items"]; // 결과 중 items 항목만 가져옴
         for (var i in items) {
-            if (i == items.length - 1) flag = 1;
+            
             var it = items[i];
             var videoId = it["id"]["videoId"];
-            getViews(flag, word, it, videoId, originRes);
+            getViews(items.length - 1, word, it, videoId, originRes);
         }
     });
 }
