@@ -93,7 +93,6 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, description
         };
         funcCount += 1;
         if (description.length != 0) videoArr.push(tmpDict);
-        console.log(funcCount, videoCount);
         if (funcCount==videoCount) {
             const newModel = new search({
                 searchWord: word,
