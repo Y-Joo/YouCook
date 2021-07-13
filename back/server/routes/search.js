@@ -16,7 +16,8 @@ var videoIdArr = [];
 var videoArr = [];
 var numberList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-let funcCount = -1;
+var funcCount = -1;
+var flag = 0;
 
 
 function getViews(videoCount, word, it, v_id, originRes) {
@@ -83,6 +84,9 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
         var _dislikeCount = viewIt.dislikeCount;
         var _commentCount = viewIt.commentCount;
         funcCount += 1;
+        if (funcCount == videoCount){
+            flag = 1
+        }
         if (_description.length != 0){
             const newModel = new videos({
                 videoId : _videoId,
@@ -103,6 +107,11 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                 } else {
                     videoArr.push(newModel);
                     videoIdArr.push(newModel._id);
+                    if (flag){
+                        return originRes.status(200).json({
+                            videoArr
+                        })
+                    }
                     keyWord.updateOne({keyWord:word}, {videoIds:videoIdArr}, {upsert:true})
                     .then((result) => {
                         //console.log(result);
@@ -110,18 +119,9 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                     .catch((err) => {
                         console.log(err);
                     })
-                    console.log(funcCount, videoCount);
-                    if (funcCount == videoCount){
-                        videoIdArr = [];
-                        funcCount = -1;
-                        return originRes.status(200).json({
-                            videoArr
-                        })
-                    }
                 }
             })
         }
-        
     });
 
 }
@@ -164,10 +164,8 @@ router.post('/find', (req, res) => {
                 getSearch(req.body.word + ' 레시피', res);
             } else {
                 var videoList = [];
-                console.log(data);
                 for (const i in data.videoIds){
                     var id = data.videoIds[i];
-                    console.log(data.videoIds[i]);
                     videos.findById(id)
                     .exec((err, video) => {
                         videoList.push(video);
