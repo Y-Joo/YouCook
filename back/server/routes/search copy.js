@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
-    videos,
-    ingredients,
-    keyWord
+    search
 } = require("../models/search");
 const app = express();
 app.use(express.urlencoded({
@@ -12,12 +10,10 @@ app.use(express.urlencoded({
 const axios = require('axios');
 var Youtube = require('youtube-node');
 var youtube = new Youtube();
-var videoIdArr = [];
 var videoArr = [];
 var numberList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-let funcCount = -1;
-
+var funcCount=-1;
 
 function getViews(videoCount, word, it, v_id, originRes) {
     var request = require('request');
@@ -54,7 +50,7 @@ function getViews(videoCount, word, it, v_id, originRes) {
 
 }
 
-function getSubs(videoCount, word, viewIt, it, channelId, originRes, _description) {
+function getSubs(videoCount, word, viewIt, it, channelId, originRes, description) {
     var request = require('request');
 
     var optionParams = {
@@ -67,61 +63,53 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
     for (var option in optionParams) {
         url += option + "=" + optionParams[option] + "&";
     }
-    
+
     //url의마지막에 붙어있는 & 정리
     url = url.substr(0, url.length - 1);
     axios.get(url).then((res) => {
         dict = (res.data);
-        var _title = it["snippet"]["title"];
-        var _channelId = it["snippet"]["channelId"];
-        var _thumbnails = it["snippet"]["thumbnails"]["high"]["url"];
-        var _channelTitle = it["snippet"]["channelTitle"];
-        var _videoId = it["id"]["videoId"];
-        var _subscriberCount = dict.items[0].statistics.subscriberCount;
-        var _viewCount = viewIt.viewCount;
-        var _likeCount = viewIt.likeCount;
-        var _dislikeCount = viewIt.dislikeCount;
-        var _commentCount = viewIt.commentCount;
+        var title = it["snippet"]["title"];
+        var channelId = it["snippet"]["channelId"];
+        var thumbnails = it["snippet"]["thumbnails"]["high"]["url"];
+        var channelTitle = it["snippet"]["channelTitle"];
+        var videoId = it["id"]["videoId"];
+        var subscriberCount = dict.items[0].statistics.subscriberCount;
+        var viewCount = viewIt.viewCount;
+        var likeCount = viewIt.likeCount;
+        var dislikeCount = viewIt.dislikeCount;
+        var commentCount = viewIt.commentCount;
+        var tmpDict = {
+            title,
+            videoId,
+            channelId,
+            thumbnails,
+            channelTitle,
+            subscriberCount,
+            viewCount,
+            likeCount,
+            dislikeCount,
+            commentCount,
+            description
+        };
         funcCount += 1;
-        if (_description.length != 0){
-            const newModel = new videos({
-                videoId : _videoId,
-                channelId : _channelId, 
-                thumbnails : _thumbnails, 
-                title : _title, 
-                channelTitle : _channelTitle, 
-                subscriberCount : _subscriberCount,
-                viewCount : _viewCount,
-                likeCount : _likeCount,
-                dislikeCount : _dislikeCount,
-                commentCount : _commentCount,
-                description : _description
+        if (description.length != 0) videoArr.push(tmpDict);
+        if (funcCount==videoCount) {
+            const newModel = new search({
+                searchWord: word,
+                videos: videoArr,
             })
+            videoArr = [];
+            funcCount = -1;
             newModel.save((err, doc) => {
                 if (err) {
                     // return res.json({ success: false, err });
                 } else {
-                    videoArr.push(newModel);
-                    videoIdArr.push(newModel._id);
-                    keyWord.updateOne({keyWord:word}, {videoIds:videoIdArr}, {upsert:true})
-                    .then((result) => {
-                        //console.log(result);
+                    return originRes.status(200).json({
+                        newModel
                     })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                    console.log(funcCount, videoCount);
-                    if (funcCount == videoCount){
-                        videoIdArr = [];
-                        funcCount = -1;
-                        return originRes.status(200).json({
-                            videoArr
-                        })
-                    }
                 }
             })
         }
-        
     });
 
 }
@@ -145,7 +133,8 @@ function getSearch(str, originRes) {
         } // 에러일 경우 에러공지하고 빠져나감
 
         var items = result["items"]; // 결과 중 items 항목만 가져옴
-        for (var i in items) { 
+        for (var i in items) {
+            
             var it = items[i];
             var videoId = it["id"]["videoId"];
             getViews(items.length - 1, word, it, videoId, originRes);
@@ -154,30 +143,17 @@ function getSearch(str, originRes) {
 }
 
 router.post('/find', (req, res) => {
-    videoArr = [];
-    keyWord.findOne({
-            keyWord: req.body.word + ' 레시피'
+    search.findOne({
+            searchWord: req.body.word + ' 레시피'
         })
-        .exec((err, data) => {
+        .exec((err, videos) => {
             if (err) return res.status(400).send(err)
-            if (!data) {
+            if (!videos) {
                 getSearch(req.body.word + ' 레시피', res);
             } else {
-                var videoList = [];
-                console.log(data);
-                for (const i in data.videoIds){
-                    var id = data.videoIds[i];
-                    console.log(data.videoIds[i]);
-                    videos.findById(id)
-                    .exec((err, video) => {
-                        videoList.push(video);
-                        if (i == data.videoIds.length - 1){
-                            return res.status(200).json({
-                                videoList
-                            })
-                        }
-                    })
-                }
+                return res.status(200).json({
+                    videos
+                })
             }
         })
 });
