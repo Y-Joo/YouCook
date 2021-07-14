@@ -18,6 +18,7 @@ var numberList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 var funcCount = -1;
 var flag = 0;
+var ingredientsList = ['양파', '소금', '설탕', '파'];
 
 
 function getViews(videoCount, word, it, v_id, originRes) {
@@ -41,21 +42,29 @@ function getViews(videoCount, word, it, v_id, originRes) {
         dict = (res.data);
         var str_list = dict.items[0].snippet.description.split('\n');
         var desStr = []
+        var recipeIngredients = [];
         for (var i in str_list) {
             str = str_list[i]
             if (str[0] in numberList && str[1] == '.' ||
                 str[0] in numberList && str[1] in numberList && str[2] == '.') {
                 if (str[str.length - 2] in alphabet || str[2] in alphabet || str[3] in alphabet || str[4] in alphabet) continue;
                 desStr.push(str);
+                for (var i in ingredientsList){
+                    ingredient = ingredientsList[i];
+                    if (str.includes(ingredient)){
+                        if (recipeIngredients.includes(ingredient)) continue;
+                        recipeIngredients.push(ingredient);
+                    } 
+                }
             }
         }
         var viewIt = dict.items[0].statistics;
-        getSubs(videoCount, word, viewIt, it, it["snippet"]["channelId"], originRes, desStr)
+        getSubs(videoCount, word, viewIt, it, it["snippet"]["channelId"], originRes, desStr, recipeIngredients)
     });
 
 }
 
-function getSubs(videoCount, word, viewIt, it, channelId, originRes, _description) {
+function getSubs(videoCount, word, viewIt, it, channelId, originRes, _description, recipeIngredients) {
     var request = require('request');
 
     var optionParams = {
@@ -83,6 +92,7 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
         var _likeCount = viewIt.likeCount;
         var _dislikeCount = viewIt.dislikeCount;
         var _commentCount = viewIt.commentCount;
+        console.log(ingredientsList);
         if (_description.length != 0){
             const newModel = new videos({
                 videoId : _videoId,
@@ -95,7 +105,8 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                 likeCount : _likeCount,
                 dislikeCount : _dislikeCount,
                 commentCount : _commentCount,
-                description : _description
+                description : _description,
+                ingredientsArr : recipeIngredients
             })
             videoArr.push(newModel);
             videoIdArr.push(newModel._id);
@@ -114,8 +125,8 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
             })
         }
         funcCount += 1;
-        console.log(funcCount, videoCount);
         if (funcCount == videoCount){
+            funcCount= -1;
             return originRes.status(200).json({
                 videoArr
             })
