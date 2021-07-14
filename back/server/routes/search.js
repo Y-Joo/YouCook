@@ -83,10 +83,6 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
         var _likeCount = viewIt.likeCount;
         var _dislikeCount = viewIt.dislikeCount;
         var _commentCount = viewIt.commentCount;
-        funcCount += 1;
-        if (funcCount == videoCount){
-            flag = 1
-        }
         if (_description.length != 0){
             const newModel = new videos({
                 videoId : _videoId,
@@ -101,25 +97,27 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                 commentCount : _commentCount,
                 description : _description
             })
+            videoArr.push(newModel);
+            videoIdArr.push(newModel._id);
             newModel.save((err, doc) => {
                 if (err) {
                     // return res.json({ success: false, err });
                 } else {
-                    videoArr.push(newModel);
-                    videoIdArr.push(newModel._id);
-                    if (flag){
-                        return originRes.status(200).json({
-                            videoArr
-                        })
-                    }
                     keyWord.updateOne({keyWord:word}, {videoIds:videoIdArr}, {upsert:true})
                     .then((result) => {
-                        //console.log(result);
+                        console.log(result);
                     })
                     .catch((err) => {
                         console.log(err);
                     })
                 }
+            })
+        }
+        funcCount += 1;
+        console.log(funcCount, videoCount);
+        if (funcCount == videoCount){
+            return originRes.status(200).json({
+                videoArr
             })
         }
     });
@@ -162,14 +160,15 @@ router.post('/find', (req, res) => {
             if (err) return res.status(400).send(err)
             if (!data) {
                 getSearch(req.body.word + ' 레시피', res);
-            } else {
+            } 
+            else {
                 var videoList = [];
                 for (const i in data.videoIds){
                     var id = data.videoIds[i];
                     videos.findById(id)
                     .exec((err, video) => {
                         videoList.push(video);
-                        if (i == data.videoIds.length - 1){
+                        if (videoList.length == data.videoIds.length){
                             return res.status(200).json({
                                 videoList
                             })
