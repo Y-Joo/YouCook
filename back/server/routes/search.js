@@ -5,6 +5,7 @@ const {
     ingredients,
     keyWord
 } = require("../models/search");
+const { ingredientsCategory } = require('./data');
 const app = express();
 app.use(express.urlencoded({
     extended: false
@@ -15,10 +16,13 @@ var youtube = new Youtube();
 var videoIdArr = [];
 var videoArr = [];
 var numberList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+var check_eng = /[a-zA-Z]/;
 var funcCount = -1;
 var flag = 0;
-var ingredientsList = ['양파', '소금', '설탕', '파'];
+
+String.prototype.replaceAll = function(org, dest) {
+    return this.split(org).join(dest);
+}
 
 
 function getViews(videoCount, word, it, v_id, originRes) {
@@ -47,12 +51,15 @@ function getViews(videoCount, word, it, v_id, originRes) {
             str = str_list[i]
             if (str[0] in numberList && str[1] == '.' ||
                 str[0] in numberList && str[1] in numberList && str[2] == '.') {
-                if (str[str.length - 2] in alphabet || str[2] in alphabet || str[3] in alphabet || str[4] in alphabet) continue;
+                if (check_eng.exec(str)){
+                    if (check_eng.exec(str).index <= 5) continue;
+                }
                 desStr.push(str);
-                for (var i in ingredientsList){
-                    ingredient = ingredientsList[i];
+                for (var i in ingredientsCategory){
+                    ingredient = ingredientsCategory[i];
                     if (str.includes(ingredient)){
                         if (recipeIngredients.includes(ingredient)) continue;
+                        str = str.replaceAll(ingredient, "");
                         recipeIngredients.push(ingredient);
                     } 
                 }
@@ -92,7 +99,6 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
         var _likeCount = viewIt.likeCount;
         var _dislikeCount = viewIt.dislikeCount;
         var _commentCount = viewIt.commentCount;
-        console.log(ingredientsList);
         if (_description.length != 0){
             const newModel = new videos({
                 videoId : _videoId,
@@ -116,11 +122,21 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                 } else {
                     keyWord.updateOne({keyWord:word}, {videoIds:videoIdArr}, {upsert:true})
                     .then((result) => {
-                        console.log(result);
+                        //console.log(result);
                     })
                     .catch((err) => {
                         console.log(err);
                     })
+                    for (const i in recipeIngredients){
+                        var ingre = recipeIngredients[i]
+                        ingredients.updateOne({ingredient : ingre}, {videoIds : videoIdArr}, {upsert:true})
+                        .then((result) => {
+                            //console.log(result);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        })
+                    }
                 }
             })
         }
