@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {
-    videos,
-    ingredients,
-    keyWord
-} = require("../models/search");
+const { videos } = require("../models/videos");
+const { keyWord } = require("../models/keyWord");
+const { ingredients } = require("../models/ingredients");
 const { ingredientsCategory } = require('./data');
 const app = express();
 app.use(express.urlencoded({
@@ -112,7 +110,8 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                 dislikeCount : _dislikeCount,
                 commentCount : _commentCount,
                 description : _description,
-                ingredientsArr : recipeIngredients
+                ingredientsArr : recipeIngredients,
+                engagement : 0
             })
             videoArr.push(newModel);
             videoIdArr.push(newModel._id);
@@ -172,39 +171,40 @@ function getSearch(str, originRes) {
         var items = result["items"]; // 결과 중 items 항목만 가져옴
         for (var i in items) { 
             var it = items[i];
-            var videoId = it["id"]["videoId"];
-            getViews(items.length - 1, word, it, videoId, originRes);
+            var _videoId = it["id"]["videoId"];
+            getViews(items.length - 1, word, it, _videoId, originRes);
         }
     });
 }
 
-router.post('/find', (req, res) => {
+router.post('', (req, res) => {
     videoArr = [];
     videoIdArr = [];
     keyWord.findOne({
             keyWord: req.body.word + ' 레시피'
-        })
-        .exec((err, data) => {
-            if (err) return res.status(400).send(err)
-            if (!data) {
-                getSearch(req.body.word + ' 레시피', res);
-            } 
-            else {
-                var videoList = [];
-                for (const i in data.videoIds){
-                    var id = data.videoIds[i];
-                    videos.findById(id)
-                    .exec((err, video) => {
-                        videoList.push(video);
-                        if (videoList.length == data.videoIds.length){
-                            return res.status(200).json({
-                                videoList
-                            })
-                        }
-                    })
-                }
+    })
+    .exec((err, data) => {
+        if (err) return res.status(400).send(err)
+        if (req.body.word == '') return res.status(400).send('레시피 이름을 입력해주세요')
+        if (!data) {
+            getSearch(req.body.word + ' 레시피', res);
+        } 
+        else {
+            var videoList = [];
+            for (const i in data.videoIds){
+                var id = data.videoIds[i];
+                videos.findById(id)
+                .exec((err, video) => {
+                    videoList.push(video);
+                    if (videoList.length == data.videoIds.length){
+                        return res.status(200).json({
+                            videoList
+                        })
+                    }
+                })
             }
-        })
+        }
+    })
 });
 
 module.exports = router;
