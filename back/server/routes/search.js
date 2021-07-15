@@ -180,6 +180,7 @@ function getSearch(str, originRes) {
 
 router.post('/find', (req, res) => {
     videoArr = [];
+    videoIdArr = [];
     keyWord.findOne({
             keyWord: req.body.word + ' 레시피'
         })
