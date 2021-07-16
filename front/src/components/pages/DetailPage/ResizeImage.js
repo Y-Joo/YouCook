@@ -12,14 +12,14 @@ import React from 'react'
 
 
 function ResizeImage(props) {
-
+ 
     return (
-        <div style={{ position: 'relative' }}>
-            <div style={{ height: '300px'}}></div>
-            <img style={{ position: 'absolute'}} src={props.srcUrl}/>
-            <div></div>
+        <div style={{   backgroundImage: `url(${props.srcUrl})`,
+                        width: '400px',
+                        height: '225.3px',
+                        backgroundPosition: '50% 50%',
+                        backgroundSize: 'cover' }}>
         </div>
-        
     )
 }
 

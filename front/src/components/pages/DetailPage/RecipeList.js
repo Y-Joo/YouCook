@@ -4,18 +4,22 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
-function VerticalList() {
+
+
+function RecipeList(props) {
+    console.log(props.recipeData);
+    const recipeList = props.recipeData.map((recipe, index) => (
+        <>
+            <ListItemText primary={recipe} />
+            <Divider />
+        </>
+    ))
+
     return (
         <List component="nav" aria-label="mailbox folders">
-            <ListItem button>
-                <ListItemText primary="Inbox" />
-            </ListItem>
-            <Divider />
-            <ListItem button divider>
-                <ListItemText primary="Drafts" />
-            </ListItem>
+            {recipeList}
         </List>
     );
 }
 
-export default VerticalList
+export default RecipeList

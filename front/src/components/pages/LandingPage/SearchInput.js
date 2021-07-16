@@ -13,7 +13,7 @@ function SearchInput(props) {
     }
 
     const onClickHandler = (props) => {
-        axios.post('http://54.180.16.31:5000/api/search/find', {
+        axios.post('http://54.180.16.31:5000/api/search/keyword', {
                 word : inputValue
             }).then((response) => {
                 console.log(response.data);
