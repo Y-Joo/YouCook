@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import RecipeList from './RecipeList'
 import ResizeImage from './ResizeImage'
+import RecipeList from './RecipeList'
+import IngredientChip from './IngredientChip';
+import Information from './Information';
 import { style } from '@material-ui/system'
 import Grid from '@material-ui/core/Grid';
 
@@ -29,7 +31,27 @@ function DetailPage() {
                             justifyContent: 'center'}}>
                 <ResizeImage srcUrl={'https://i.ytimg.com/vi/eIo2BaE6LxI/hqdefault.jpg'}></ResizeImage> 
             </Grid>
-            <RecipeList recipeData={videoData.description ?? []}></RecipeList>
+            <Grid  
+                item xs={12} 
+                style={{  
+                            display: 'flex' ,
+                            justifyContent: 'center'}}>
+                <Information></Information>
+            </Grid>
+            <Grid  
+                item xs={12} 
+                style={{  
+                            display: 'flex' ,
+                            justifyContent: 'center'}}>
+                <IngredientChip ingredientData={videoData.ingredientsArr ?? []}/>
+            </Grid>
+            <Grid  
+                item xs={12} 
+                style={{  
+                            display: 'flex' ,
+                            justifyContent: 'center'}}>
+                <RecipeList recipeData={videoData.description ?? []}/>
+            </Grid>
         </div>
         
     )

@@ -16,7 +16,7 @@ function RecipeList(props) {
     ))
 
     return (
-        <List component="nav" aria-label="mailbox folders">
+        <List component="nav" aria-label="mailbox folders" style={{padding: '1rem'}}>
             {recipeList}
         </List>
     );
