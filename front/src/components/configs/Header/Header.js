@@ -6,9 +6,10 @@ import Typography from '@material-ui/core/Typography';
 function Header() {
     return (
         <AppBar position="static">
-            <Toolbar>
-                <Typography variant="h6">
-                    YouCook
+            <Toolbar style={{display:'flex', justifyContent:'center'}}>
+                <Typography variant="h6"
+                    style={{textAlign:'center'}}>
+                    🤔YouCook
                 </Typography>
             </Toolbar>
       </AppBar>

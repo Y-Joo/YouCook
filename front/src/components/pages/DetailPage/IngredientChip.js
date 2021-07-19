@@ -4,12 +4,12 @@ import { Chip } from '@material-ui/core';
 function IngredientChip(props) {
     const ingredientChips = props.ingredientData.map((ingredient, index) => (
         <>
-            <Chip variant="outlined" size="small" label={ingredient} style={{margin: '0.1rem'}}/>
+            <Chip variant="outlined" size="small" label={ingredient} style={{margin: '0.15rem'}}/>
         </>
     ))
     
     return (
-        <div style={{padding: '1rem'}}>
+        <div style={{margin: '0 1rem 0rem 1rem'}}>
             {ingredientChips}
         </div>
     )
