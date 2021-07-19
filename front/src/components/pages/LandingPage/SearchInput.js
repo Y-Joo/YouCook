@@ -19,7 +19,7 @@ function SearchInput(props) {
                 console.log(response.data);
                 props.props.history.push({
                     pathname: '/result',
-                    state: {videoList: response.data}
+                    state: {data: response.data}
                 });
             }).catch((error) => {
                 console.log(error);
