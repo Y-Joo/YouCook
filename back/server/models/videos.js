@@ -11,7 +11,7 @@ const videosSchema = mongoose.Schema({
 	likeCount : Number,
 	dislikeCount : Number,
 	commentCount : Number,
-	engagement : Number,
+	weeklyViews : Number,
 	description : [],
 	ingredientsArr : []
 })

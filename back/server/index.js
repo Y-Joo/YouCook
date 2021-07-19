@@ -21,8 +21,8 @@ app.use(cors())
 app.use(bodyParser.json());
 
 app.use('/api/search/keyword', require('./routes/keyword'));
-//app.use('/api/search/ingredients', require('./routes/ingredients'));
-app.use('/api/search/engagement', require('./routes/engagement'));
+app.use('/api/search/detail', require('./routes/detail'));
+app.use('/api/search/sorted', require('./routes/sorted'));
 
 app.listen(port, () => {
   console.log(`Server Listening on ${port}`)

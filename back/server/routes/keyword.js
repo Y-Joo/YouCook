@@ -111,7 +111,7 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                 commentCount : _commentCount,
                 description : _description,
                 ingredientsArr : recipeIngredients,
-                engagement : 0
+                weeklyViews : 0
             })
             videoArr.push(newModel);
             videoIdArr.push(newModel._id);
@@ -160,7 +160,7 @@ function getSearch(str, originRes) {
     //// 검색 옵션 끝
 
     var word = str; // 검색어 지정
-    var limit = 20; // 출력 갯수
+    var limit = 50; // 출력 갯수
 
     youtube.search(word, limit, function(err, result) { // 검색 실행
         if (err) {

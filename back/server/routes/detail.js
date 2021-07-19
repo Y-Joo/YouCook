@@ -8,8 +8,8 @@ router.get('/:videoId', (req, res) => {
         videos.updateOne({
             videoId : req.params.videoId}, 
             {$set:
-                { engagement : video.engagement + 1 }
-        })
+                { weeklyViews : video.weeklyViews + 1 }
+            })
         .then((result) => {
             console.log(result);
             return res.status(200).json({
