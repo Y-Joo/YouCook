@@ -9,7 +9,7 @@ function IngredientChip(props) {
     ))
     
     return (
-        <div style={{margin: '0 1rem 0rem 1rem'}}>
+        <div>
             {ingredientChips}
         </div>
     )

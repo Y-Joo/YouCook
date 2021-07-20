@@ -19,7 +19,7 @@ function LandingPage(props) {
     centerMode: true,
     centerPadding: "4em 1em"
   };
-  const [videoData, setVideoData] = useState({})
+  const [videoData, setVideoData] = useState([])
   useEffect(() => {
     axios.get(`http://54.180.16.31:5000/api/search/sorted`)
         .then((response) => {
@@ -30,8 +30,8 @@ function LandingPage(props) {
   }, [])
   const items = videoData
   console.log(items)
-  const ItemList = items && items.map((item) =>
-    (<Card className="card" title={item.title} channelTitle={item.channelTitle} thumbnails={item.thumbnails} description={item.description} ingredientsArr={item.ingredientsArr}></Card>
+  const ItemList = items && items .map((item) =>
+    (<Card className="card" title={item.title ?? ''} channelTitle={item.channelTitle ?? ''} thumbnails={item.thumbnails ?? ''} description={item.description ?? ''} ingredientsArr={item.ingredientsArr ?? ''}></Card>
     )
   );
   
@@ -43,7 +43,7 @@ function LandingPage(props) {
                       marginTop:'10rem'}}>
         <SearchInput props={props}></SearchInput>
       </Grid>
-      <Grid item xs={12}>
+      <Grid className="slide" item xs={12}>
         <Slider {...settings}>
           {ItemList}
         </Slider>
