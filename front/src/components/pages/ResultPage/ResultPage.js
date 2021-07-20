@@ -17,7 +17,6 @@ function ResultPage(props) {
             </Card>
         </div>
     ));
-
     return (
         <div className="page">
             <div className="col">

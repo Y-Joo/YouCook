@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import ResizeImage from '../DetailPage/ResizeImage';
+import IngredientChip from '../DetailPage/IngredientChip';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -28,10 +29,6 @@ const useStyles = makeStyles(() => ({
 export default function MediaControlCard(props) {
     const classes = useStyles();
 
-    const ingredients = props.ingredientsArr
-    const ingredientsList = ingredients && ingredients.map((ingredient) =>
-        (<span> {ingredient},</span>)
-    );
     return (
         <Card className={classes.root}>
             <div className={classes.thumbnails}>
@@ -51,7 +48,7 @@ export default function MediaControlCard(props) {
                     </Typography>
                     <Typography variant="h8">
                         음식 재료<br />
-                        {ingredientsList}
+                        <IngredientChip ingredientData={props.ingredientsArr ?? []}></IngredientChip>
                     </Typography>
                 </CardContent>
             </div>
