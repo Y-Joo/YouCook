@@ -26,12 +26,18 @@ function SearchInput(props) {
             });
     }
     
+    const onKeyPress = e => {
+        if (e.key === 'Enter'){
+            onClickHandler(props);
+        }
+    }
     return (
         <div style={{ border: '1px solid black', borderRadius: '1rem' }}>
             <InputBase 
                 onChange={(e) => onChangeHandler(e)}
                 placeholder="레시피를 입력하세요."
-                style={{ marginLeft: '1rem' }}/>
+                style={{ marginLeft: '1rem' }}
+                onKeyPress = {onKeyPress}/>
             <IconButton type="submit" onClick={() =>onClickHandler(props)}>
                 <SearchIcon/>
             </IconButton>
