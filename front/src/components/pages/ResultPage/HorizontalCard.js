@@ -5,23 +5,25 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import ResizeImage from '../DetailPage/ResizeImage';
 import IngredientChip from '../DetailPage/IngredientChip';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(() => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center', 
+        margin: '20px'
     },
     thumbnails:{
         textAlign: 'center',
     },
     details: {
-
         display: 'flex',
         flexDirection: 'column',
+        width: '440px',
     },
     content: {
-        textAlign: 'left'
+        textAlign: 'left',
     },
 
 }));
@@ -30,7 +32,7 @@ export default function MediaControlCard(props) {
     const classes = useStyles();
 
     return (
-        <Card className={classes.root}>
+        <div className={classes.root}>
             <div className={classes.thumbnails}>
                 <ResizeImage
                 className={classes.cover}
@@ -51,7 +53,8 @@ export default function MediaControlCard(props) {
                         <IngredientChip ingredientData={props.ingredientsArr ?? []}></IngredientChip>
                     </Typography>
                 </CardContent>
+                <Divider/>
             </div>
-        </Card>
+        </div>
     );
 }

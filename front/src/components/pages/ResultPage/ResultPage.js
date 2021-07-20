@@ -3,11 +3,19 @@ import Card from './HorizontalCard'
 import Header from '../../configs/Header/Header';
 
 function ResultPage(props) {
-    console.log(props.location.state.data);
+    //console.log(props.location.state.data);
     const items = props.location.state.data.videoList;
-    console.log(items);
-    const ItemList = items.map((item, index) => (
-        <div className="card" >
+    //console.log(items);
+
+    const onClickHandler = (item) => {
+        console.log(item)
+        props.history.push({
+            pathname: `/detail/${item.videoId}`,
+        });
+    }
+
+    const ItemList = items && items.map((item, index) => (
+        <div className="card" onClick={() =>onClickHandler(item)}>
             <Card 
                 title={item.title} 
                 channelTitle={item.channelTitle} 
