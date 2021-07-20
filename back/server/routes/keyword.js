@@ -143,7 +143,7 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
         if (funcCount == videoCount){
             funcCount= -1;
             return originRes.status(200).json({
-                videoArr
+                videoList: videoArr
             })
         }
     });
