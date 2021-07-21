@@ -1,6 +1,5 @@
 import React from 'react'
 import Card from './HorizontalCard'
-import Header from '../../configs/Header/Header';
 
 function ResultPage(props) {
     //console.log(props.location.state.data);

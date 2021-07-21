@@ -16,11 +16,14 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { PinDropSharp } from '@material-ui/icons';
+import { CardActionArea } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
+    margin: '1em',
+    alignContent: 'center'
   },
   media: {
     height: 0,
@@ -63,17 +66,14 @@ export default function RecipeReviewCard(props) {
 
   return (
     <Card className={classes.root}>
+      <CardActionArea>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
             
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+
         title= {props.title}
         subheader = {props.channelTitle}
       />
@@ -88,6 +88,7 @@ export default function RecipeReviewCard(props) {
             {ingredientsList}
         </Typography>
       </CardContent>
+      </CardActionArea>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
@@ -103,7 +104,7 @@ export default function RecipeReviewCard(props) {
           aria-expanded={expanded}
           aria-label="show more"
         >
-          <ExpandMoreIcon />
+        <ExpandMoreIcon />
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>

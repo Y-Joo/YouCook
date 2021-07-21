@@ -11,7 +11,6 @@ function DetailPage({match}) {
     const [videoData, setVideoData] = useState({})
     
     const videoId = match.params.videoId
-    console.log(videoId)
     useEffect(() => {
         axios.get(`http://54.180.16.31:5000/api/search/detail/${videoId}`)
             .then((response) => {

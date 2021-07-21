@@ -6,8 +6,8 @@ import SearchInput from './SearchInput'
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
-const axios = require('axios');
 
+const axios = require('axios');
 
 function LandingPage(props) {
   const settings = {
@@ -15,9 +15,31 @@ function LandingPage(props) {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 1,
+    slidesToScroll: 3,
     centerMode: true,
-    centerPadding: "4em 1em"
+    centerPadding: "0em",
+    align: 'center',
+    responsive: [ // 반응형 웹 구현 옵션
+      {
+        breakpoint: 1200, // 화면 사이즈 1200px
+        settings: {
+          slidesToShow: 3,
+        }
+      },
+      {
+        breakpoint: 850,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1
+        }
+      }
+    ]
+
   };
   const [videoData, setVideoData] = useState([])
   useEffect(() => {
@@ -29,7 +51,6 @@ function LandingPage(props) {
         });
   }, [])
   const items = videoData
-  console.log(items)
   const ItemList = items && items .map((item) =>
     (<Card className="card" title={item.title ?? ''} channelTitle={item.channelTitle ?? ''} thumbnails={item.thumbnails ?? ''} description={item.description ?? ''} ingredientsArr={item.ingredientsArr ?? ''}></Card>
     )

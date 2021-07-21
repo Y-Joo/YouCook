@@ -6,13 +6,15 @@ import Typography from '@material-ui/core/Typography';
 import ResizeImage from '../DetailPage/ResizeImage';
 import IngredientChip from '../DetailPage/IngredientChip';
 import Divider from '@material-ui/core/Divider';
+import { CardActionArea } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center', 
-        margin: '20px'
+        margin: '20px',
+        flex: 1
     },
     thumbnails:{
         textAlign: 'center',
@@ -32,6 +34,7 @@ export default function MediaControlCard(props) {
     const classes = useStyles();
 
     return (
+        <CardActionArea>
         <div className={classes.root}>
             <div className={classes.thumbnails}>
                 <ResizeImage
@@ -56,5 +59,6 @@ export default function MediaControlCard(props) {
                 <Divider/>
             </div>
         </div>
+        </CardActionArea>
     );
 }
