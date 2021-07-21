@@ -7,7 +7,6 @@ import Divider from '@material-ui/core/Divider';
 
 
 function RecipeList(props) {
-    console.log(props.recipeData);
     const recipeList = props.recipeData.map((recipe, index) => (
         <>
             <ListItemText primary={recipe} style={{paddingBottom: '0.3rem', paddingTop: '0.3rem'}}/>
