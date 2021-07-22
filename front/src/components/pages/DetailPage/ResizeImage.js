@@ -15,8 +15,8 @@ function ResizeImage(props) {
  
     return (
         <div style={{   backgroundImage: `url(${props.srcUrl})`,
-                        width: '400px',
-                        height: '225.3px',
+                        width: '350px',
+                        height: '197.1px',
                         backgroundPosition: '50% 50%',
                         backgroundSize: 'cover' }}>
         </div>

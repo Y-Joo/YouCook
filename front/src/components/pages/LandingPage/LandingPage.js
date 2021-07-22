@@ -55,7 +55,7 @@ function LandingPage(props) {
   }, [])
   const items = videoData
   const ItemList = items && items .map((item) =>
-    (<Card className="card" title={item.title ?? ''} channelTitle={item.channelTitle ?? ''} thumbnails={item.thumbnails ?? ''} description={item.description ?? ''} ingredientsArr={item.ingredientsArr ?? ''}></Card>
+    (<Card className="card" title={item.title ?? ''} channelTitle={item.channelTitle ?? ''} thumbnails={item.thumbnails ?? ''} description={item.description ?? ''} ingredientsArr={item.ingredientsArr ?? ''} videoId={item.videoId ?? ''}></Card>
     )
   );
   
@@ -65,8 +65,13 @@ function LandingPage(props) {
             style={{  display: 'flex' ,
                       justifyContent: 'center',
                       marginTop:'4rem',
-                      marginBottom:'1rem',}}>
+                      marginBottom:'2rem',}}>
         <SearchInput props={props}></SearchInput>
+      </Grid>
+      <Grid item xs={12}
+            style={{  display: 'flex' ,
+                      justifyContent: 'center'}}>
+       🔥Best🔥
       </Grid>
       <Grid className="slide" item xs={12}>
         <Slider {...settings}>

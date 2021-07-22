@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center', 
-        margin: '20px',
+        margin: '10px',
         flex: 1
     },
     thumbnails:{
@@ -22,11 +22,23 @@ const useStyles = makeStyles(() => ({
     details: {
         display: 'flex',
         flexDirection: 'column',
-        width: '440px',
-    },
-    content: {
+        width: '350px',
         textAlign: 'left',
     },
+    title: {
+        fontSize: '18px',
+        marginTop: '5px',
+        marginBottom: '5px',
+    },
+    channelTitle: {
+        fontSize: '14px',
+        color: '#444444',
+    },
+    ingredient: {
+        fontSize: '12px',
+        color: '#777777',
+        margin: '2px',
+    }
 
 }));
 
@@ -44,18 +56,16 @@ export default function MediaControlCard(props) {
             />
             </div>
             <div className={classes.details}>
-                <CardContent className={classes.content}>
-                    <Typography component="h5" variant="h5">
-                        {props.title}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                        {props.channelTitle}
-                    </Typography>
-                    <Typography variant="h8">
-                        음식 재료<br />
+                    <span className={classes.title}>
+                        {props.title}<br/>
+                    </span>
+                    <span className={classes.channelTitle}>
+                        {props.channelTitle}<br/>
+                    </span>
+                    <span className={classes.ingredient}>
+                        음식 재료<br/>
                         <IngredientChip ingredientData={props.ingredientsArr ?? []}></IngredientChip>
-                    </Typography>
-                </CardContent>
+                    </span>
                 <Divider/>
             </div>
         </div>
