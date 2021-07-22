@@ -91,6 +91,8 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
         var _channelId = it["snippet"]["channelId"];
         var _thumbnails = it["snippet"]["thumbnails"]["high"]["url"];
         var _channelTitle = it["snippet"]["channelTitle"];
+        _title=_title.replaceAll('&quot;', '"');
+        _title=_title.replaceAll('&#39;', "'");
         var _videoId = it["id"]["videoId"];
         var _subscriberCount = dict.items[0].statistics.subscriberCount;
         var _viewCount = viewIt.viewCount;
@@ -115,6 +117,16 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
             })
             videoArr.push(newModel);
             videoIdArr.push(newModel._id);
+            for (const i in recipeIngredients){
+                var ingre = recipeIngredients[i]
+                ingredients.updateOne({ingredient : ingre}, {$push : {videoIds : newModel._id}}, {upsert : true})
+                .then((result) => {
+                    //console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            }
             newModel.save((err, doc) => {
                 if (err) {
                     // return res.json({ success: false, err });
@@ -126,16 +138,6 @@ function getSubs(videoCount, word, viewIt, it, channelId, originRes, _descriptio
                     .catch((err) => {
                         console.log(err);
                     })
-                    for (const i in recipeIngredients){
-                        var ingre = recipeIngredients[i]
-                        ingredients.updateOne({ingredient : ingre}, {videoIds : videoIdArr}, {upsert:true})
-                        .then((result) => {
-                            //console.log(result);
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        })
-                    }
                 }
             })
         }

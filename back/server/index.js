@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 app.use('/api/search/keyword', require('./routes/keyword'));
 app.use('/api/search/detail', require('./routes/detail'));
 app.use('/api/search/sorted', require('./routes/sorted'));
+app.use('/api/search/ingredients', require('./routes/ingredients'));
 
 app.listen(port, () => {
   console.log(`Server Listening on ${port}`)
