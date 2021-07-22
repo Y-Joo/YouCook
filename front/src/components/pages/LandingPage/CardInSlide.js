@@ -16,13 +16,20 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { PinDropSharp } from '@material-ui/icons';
-import { CardActionArea } from '@material-ui/core';
+import { CardActionArea, styled } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
-    margin: '1em',
+    minHeight: 500,
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    margin: '0.7em',
+    marginTop: 0,
     alignContent: 'center'
   },
   media: {
@@ -44,8 +51,34 @@ const useStyles = makeStyles((theme) => ({
   },
   over: {
     overflowY:'scroll',
+  },
+  content: {
+    height:400,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+
   }
 }));
+
+const GlobalCss = withStyles({
+  // @global is handled by jss-plugin-global.
+  '@global': {
+    // You should target [class*="MuiButton-root"] instead if you nest themes.
+    '.MuiCardHeader-title': {
+      display: '-webkit-box',
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: 'vertical',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+    },
+    '.MuiCardHeader-root': {
+      minHeight: 55,
+      padding: '1em 1em'
+    }
+  },
+})(() => null);
+
 
 export default function RecipeReviewCard(props) {
   const classes = useStyles();
@@ -63,32 +96,41 @@ export default function RecipeReviewCard(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const path = "/detail/"+props.videoId;
+  console.log(path);
 
   return (
+    <>
     <Card className={classes.root}>
       <CardActionArea>
-      <CardHeader
-        avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            
-          </Avatar>
-        }
-
-        title= {props.title}
-        subheader = {props.channelTitle}
-      />
-      <CardMedia
-        className={classes.media}
-        image={props.thumbnails}
-        title="Paella dish"
-      />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-            음식재료<br/>
-            {ingredientsList}
-        </Typography>
-      </CardContent>
+      <Link to={"/detail/"+props.videoId} 
+            style={{textDecoration:'none',
+                    color:'inherit'}}>
+        <div className={classes.content}>
+        <GlobalCss/>
+        <CardHeader
+          avatar={
+            <Avatar aria-label="recipe" className={classes.avatar}>
+            </Avatar>
+          }
+          title= {props.title}
+          subheader = {props.channelTitle}
+        />
+        <CardMedia
+          className={classes.media}
+          image={props.thumbnails}
+          title="thumbnails"
+        />
+        <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+              음식재료<br/>
+              {ingredientsList}
+          </Typography>
+        </CardContent>
+        </div>
+      </Link>
       </CardActionArea>
+
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
@@ -107,6 +149,7 @@ export default function RecipeReviewCard(props) {
         <ExpandMoreIcon />
         </IconButton>
       </CardActions>
+
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>레시피:</Typography>
@@ -114,5 +157,6 @@ export default function RecipeReviewCard(props) {
         </CardContent>
       </Collapse>
     </Card>
+    </>
   );
 }

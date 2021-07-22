@@ -37,7 +37,7 @@ function DetailPage({match}) {
                     channelTitle={videoData.channelTitle ?? ''}
                     viewCount={videoData.viewCount ?? 0}
                     subscriberCount={videoData.subscriberCount ?? 0}
-                    likeCount={videoData.likeCount ?? 0} />
+                    likeCount={videoData.likeCount ?? 0}/>
                 <span style={{textAlign:'center', margin:'1rem 0 0.5rem 0'}}>재료</span>
                 <IngredientChip  style={{textAlign:'center'}} ingredientData={videoData.ingredientsArr ?? []}/>
                 <span style={{textAlign:'center', margin:'1rem 0 0 0'}}>레시피</span>
