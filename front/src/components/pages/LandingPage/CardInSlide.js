@@ -90,7 +90,7 @@ export default function RecipeReviewCard(props) {
   );
   const ingredients = props.ingredientsArr
   const ingredientsList = ingredients && ingredients.map((ingredient) =>
-    (<span>{ingredient}, </span>)
+    ingredients[0]===ingredient ? ingredient : ", " + ingredient
   );
 
   const handleExpandClick = () => {
@@ -124,7 +124,7 @@ export default function RecipeReviewCard(props) {
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
               음식재료<br/>
-              {ingredientsList}
+              <span>{ingredientsList}</span>
           </Typography>
         </CardContent>
         </div>

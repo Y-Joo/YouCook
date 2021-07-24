@@ -7,7 +7,6 @@ function ResultPage(props) {
     //console.log(items);
 
     const onClickHandler = (item) => {
-        console.log(item)
         props.history.push({
             pathname: `/detail/${item.videoId}`,
         });

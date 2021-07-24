@@ -7,8 +7,17 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import { Height } from '@material-ui/icons';
+import styled from 'styled-components';
 
 const axios = require('axios');
+const StyledSlider = styled(Slider)`
+    .slick-prev:before{
+      color: black;
+    }
+    .slick-next:before{
+      color: black;
+    }
+`;
 
 function LandingPage(props) {
   const settings = {
@@ -74,9 +83,9 @@ function LandingPage(props) {
        🔥Best🔥
       </Grid>
       <Grid className="slide" item xs={12}>
-        <Slider {...settings}>
+        <StyledSlider {...settings}>
           {ItemList}
-        </Slider>
+        </StyledSlider>
       </Grid>
     </div>
     
